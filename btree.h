@@ -19,6 +19,7 @@ public:
 	void borrow(int);
 	void left_borrow(int);
 	void right_borrow(int);
+	bool search(int);
 };
 
 class BTREE {
@@ -29,4 +30,5 @@ public:
 	void insert(int new_key);
 	void print_pre_oder();
 	void delete_key(int);
+	bool search(int);
 };

@@ -53,6 +53,25 @@ void BTREE::print_pre_oder()
 {
 	root->print_pre_oder();
 }
+void BTREE::delete_key(int target)
+{
+	cout << "attempting to delete " << target << endl;
+	root->remove_key(target);
+}
+bool BTREE::search(int target)
+{
+	cout << "Searching for: " << target << endl;
+	bool found = root->search(target);
+	if (found)
+	{
+		cout << target << " was found." << endl;
+	}
+	else
+	{
+		cout << target << " was not found." << endl;
+	}
+	return found;
+}
 btree_node::btree_node(int min_deg, bool is_leaf)
 {
 	keys_array = new int[2 * min_deg - 1];
@@ -250,11 +269,6 @@ void btree_node::remove_leaf(int target)
 		}
 	}
 }
-void BTREE::delete_key(int target)
-{
-	cout << "attempting to delete " << target << endl;
-	root->remove_key(target);
-}
 
 void btree_node::remove_non_leaf(int index)
 {
@@ -404,4 +418,41 @@ void btree_node::right_borrow(int index)
 	r_child->num_of_keys -= 1;
 
 	return;
+}
+
+bool btree_node::search(int target)
+{
+	bool found = true;
+	int running_index = 0;
+	while (running_index < num_of_keys && keys_array[running_index] < target)
+	{
+		running_index += 1;
+	}
+	if (running_index < num_of_keys)
+	{
+		if (keys_array[running_index] == target)
+		{
+			found = true;
+		}
+		else if(!leaf_status)
+		{
+			found= child_ptr_array[running_index]->search(target);
+		}
+		else
+		{
+			found = false;
+		}
+	}
+	else
+	{
+		if (leaf_status)
+		{
+			found = false;
+		}
+		else
+		{
+			found = child_ptr_array[running_index]->search(target);
+		}
+	}
+	return found;
 }
